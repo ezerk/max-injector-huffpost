@@ -432,7 +432,7 @@ waitForGlobal("adSetMOAT", function() {
 	<script type="application/javascript">
 window.maxConfig = {
      global: {
-         onLoadTimeout: 10, //optional
+         onLoadTimeout: 5, //optional
          player: {
            pid: '5c5c100b34f69d0ef5ff20d0', // ASAP: Downpage Desktop : HuffPost Semantic Before you go
            bcid: '56000e19e4b0e4e194b84b31', // HP
@@ -464,7 +464,7 @@ window.maxConfig = {
          conditionFunc: () => {
            const beforeYouGoAlreadyExists = !!document.querySelector('div.entry__content > div.entry__body > section.extra-content.yr-extra-content');
            if(beforeYouGoAlreadyExists) {
-             return false;
+             return true;
            }
            // optionally:
            // return shouldPresentToCurrentUser(); //HP engineering implementation
@@ -472,7 +472,7 @@ window.maxConfig = {
          },
        },{
          //huffpost - before you go with template, when other player exits
-         type: 'REPLACE_ELEMENT',
+         type: 'INSERT',
          cssSelector: '#videos-container > video:nth-child(2)', // writer name footer
          toggle: false, // keep player in page after video ends
          insertAfter: false,
