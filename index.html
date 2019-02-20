@@ -3,26 +3,74 @@
 <html lang="en">
 <head>
 
-	<script type="application/javascript">
+<script type="application/javascript">
 window.maxConfig = {
      global: {
-         onLoadTimeout: 10, //optional timeout before script start running (ms)
+         onLoadTimeout: 10, //optional
          player: {
            pid: '5c5c100b34f69d0ef5ff20d0', // ASAP: Downpage Desktop : HuffPost Semantic Before you go
-           bcid: '56000e19e4b0e4e194b84b31', // HuffPost
+           bcid: '56000e19e4b0e4e194b84b31', // HP
          },
+         // template that include the "Before you go” wrapper
+         template: `
+         <section class="extra-content yr-extra-content">
+           <div class="extra-content-eyebrow">
+             <div class="extra-content-eyebrow__donut">
+               <img alt="HuffPost" class="extra-content-eyebrow__donut__src" src="https://s.m.huffpost.com/assets/donut-a63d2a21ca5f04f551be212a9496d4deba5d40f4bcb801f34ba14f27bb3bb32a.svg"/>
+             </div>
+             <h4 class="extra-content-eyebrow__text">BEFORE YOU GO</h4>
+           </div>
+        
+           <div class="extra-content__media">
+             <div class="content-list-component embed-asset yr-content-list-embed ">
+               <div id="max-player-injector"></div>
+             </div>
+           </div>
+         </section>`,
      },
-     strategies: [
-         {
-               type: 'REPLACE_ELEMENT',
-               cssSelector: '#id_will_be_supplied_by_hp_engineering', // player will go here
-               toggle: false, // keep player on page after video ends
-               injectIfPlayerAlreadyExists: false, // do not add in case page already has a player
-         }
-       ],
+     strategies: [{
+         //huffpost - before you go with template, when no player other exists on page (autoplay)
+         type: 'INSERT',
+         cssSelector: 'div.entry__content > div.entry__body > div.entry_footer.yr-entry-footer', // writer name footer
+         toggle: false, // keep player in page after video ends
+         insertAfter: false,
+         injectIfPlayerAlreadyExists: false,
+         conditionFunc: () => {
+           const beforeYouGoAlreadyExists = !!document.querySelector('div.entry__content > div.entry__body > section.extra-content.yr-extra-content');
+           if(beforeYouGoAlreadyExists) {
+             return false;
+           }
+           // optionally:
+           // return shouldPresentToCurrentUser(); //HP engineering implementation
+           return true;
+         },
+       },{
+         //huffpost - before you go with template, when other player exits
+         type: 'INSERT',
+         cssSelector: 'div.entry__content > div.entry__body > div.entry_footer.yr-entry-footer', // writer name footer
+         toggle: false, // keep player in page after video ends
+         insertAfter: false,
+         injectIfPlayerAlreadyExists: true, // note this changed
+         player: { //overwrite global.player, add macro - autoplay only when in view
+           pid: '5c5c100b34f69d0ef5ff20d0', // ASAP: Downpage Desktop : HuffPost Semantic Before you go
+           bcid: '56000e19e4b0e4e194b84b31', // HP
+           'm.playback': 'autoplay_when_in_view',
+           'm.autoplayinview': 100,
+         },
+         conditionFunc: () => {
+           const beforeYouGoAlreadyExists = !!document.querySelector('div.entry__content > div.entry__body > section.extra-content.yr-extra-content');
+           if(beforeYouGoAlreadyExists) {
+             return false;
+           }
+           // optionally:
+           // return shouldPresentToCurrentUser(); // HP engineering implementation
+           return true;
+         },
+       }],
  }
 </script>
-<script src="https://s3.amazonaws.com/vdb-cdn-files/prod/max-suite/30.1f98729/max.js"></script>
+<script src="https://s3.amazonaws.com/vdb-cdn-files/prod/max-suite/34.a2ef451/max.js"></script>
+
 	
 	
 <script type="text/javascript">window.NREUM||(NREUM={});NREUM.info={"beacon":"bam.nr-data.net","errorBeacon":"bam.nr-data.net","licenseKey":"a2134792db","applicationID":"36240457","transactionName":"dApeRxcOWV5RFB1SA0QORFwVTlBcQBRbUxUYFlhcEg==","queueTime":2,"applicationTime":29,"agent":"","atts":"TEdFEV8aF1dQD0ZfCVlHChEQEhceFhVXVRJeCl4RX0NlXVgPRl8FREdNTg=="}</script>
